@@ -1,14 +1,15 @@
 using Microsoft.Extensions.Configuration;
 
-namespace MongoDatabaseAdapter.Options
+namespace MongoDatabaseAdapter
 {
     public class AddMongoDbOptions
     {
-        public string ConnectionString { get; private set; }
-        
-        public void AddConnectionString(string connectionString)
-        {
-            ConnectionString = connectionString;
-        }
+        private string _connectionString;
+
+        public void AddConnectionString(string connectionString) 
+            => _connectionString = connectionString;
+
+        public string GetConnectionString() 
+            => _connectionString;
     }
 }

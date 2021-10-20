@@ -4,10 +4,10 @@ using Ardalis.GuardClauses;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using MongoDatabaseAdapter.Options;
+using MongoDatabaseAdapter.Abstractions;
 using MongoDB.Driver;
 
-namespace MongoDatabaseAdapter.Abstractions
+namespace MongoDatabaseAdapter
 {
     public static class MongoDatabaseExtensions
     {
@@ -24,10 +24,15 @@ namespace MongoDatabaseAdapter.Abstractions
             services.AddScoped<IMongoClient, MongoClient>(provider => 
             {
                 var options = provider.GetRequiredService<IOptions<AddMongoDbOptions>>().Value;
-                var connectionString = Guard.Against.NullOrWhiteSpace(options?.ConnectionString, nameof(options.ConnectionString));
+                var connectionString = options?.GetConnectionString();
 
+                connectionString = Guard.Against.NullOrWhiteSpace(connectionString, nameof(connectionString));
+
+                // TODO: Provide more connection options
                 return new MongoClient(connectionString);
             });
+
+            services.AddScoped<IMongoDbRepository, MongoDbRepository>();
             
             return services;
         }
