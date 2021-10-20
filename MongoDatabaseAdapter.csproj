@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <PackageId>ACB.Adapters.MongoDbAdapter</PackageId>
+    <Authors>Andre B.</Authors>
+    <Description>MongoDb Adapter for ACB.Adapters</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageTags>MongoDb, Abstraction, Adapter, DbAccess</PackageTags>
+    <RepositoryUrl>https://github.com/aburke15/mongo-db-adapter</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
