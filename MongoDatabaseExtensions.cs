@@ -5,7 +5,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDatabaseAdapter.Abstractions;
-using MongoDatabaseAdapter.Options;
 using MongoDB.Driver;
 
 namespace MongoDatabaseAdapter

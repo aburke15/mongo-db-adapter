@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace MongoDatabaseAdapter.Options
+namespace MongoDatabaseAdapter
 {
     public class AddMongoDbOptions
     {
