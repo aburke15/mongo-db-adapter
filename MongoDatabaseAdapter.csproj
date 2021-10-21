@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <PackageId>ABU.Adapters.MongoDbAdapter</PackageId>
     <Version>1.0.1</Version>
     <Authors>Andre B.</Authors>
@@ -15,7 +15,6 @@
     <PackageReference Include="Ardalis.GuardClauses" Version="3.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="5.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.13.2" />
   </ItemGroup>
