@@ -1,6 +1,4 @@
-using Microsoft.Extensions.Configuration;
-
-namespace MongoDatabaseAdapter
+namespace MongoDatabaseAdapter.Options
 {
     public class AddMongoDbOptions
     {
