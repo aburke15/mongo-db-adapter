@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using MongoDatabaseAdapter.Settings;
 
 namespace MongoDatabaseAdapter.Abstractions
 {
     public interface IMongoDbRepository
     {
-        Task<IEnumerable<T>> GetAllAsync<T>(string databaseName, string collectionName, CancellationToken ct = default);
-        Task InsertOneAsync<T>(T entity, string databaseName, string collectionName, CancellationToken ct = default);
+        Task<IEnumerable<T>> GetAllAsync<T>(MongoDbConnectionSettings connectionSettings, CancellationToken ct = default) where T : class;
+
+        Task InsertOneAsync<T>(MongoDbConnectionSettings connectionSettings, T entity, CancellationToken ct = default) where T : class;
     }
 }

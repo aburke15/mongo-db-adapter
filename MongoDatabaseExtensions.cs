@@ -3,6 +3,7 @@ using Ardalis.GuardClauses;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDatabaseAdapter.Abstractions;
+using MongoDatabaseAdapter.Concrete;
 using MongoDatabaseAdapter.Options;
 using MongoDB.Driver;
 
@@ -21,9 +22,8 @@ namespace MongoDatabaseAdapter
             services = Guard.Against.Null(services, nameof(services));
             setupAction = Guard.Against.Null(setupAction, nameof(setupAction));
 
-            services
-                .AddOptions()
-                .Configure(setupAction);
+            services.AddOptions();
+            services.Configure(setupAction);
 
             services.AddScoped<IMongoClient, MongoClient>(provider => 
             {
