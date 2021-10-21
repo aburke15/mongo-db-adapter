@@ -1,16 +1,20 @@
-
 using System;
 using Ardalis.GuardClauses;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDatabaseAdapter.Abstractions;
+using MongoDatabaseAdapter.Options;
 using MongoDB.Driver;
 
 namespace MongoDatabaseAdapter
 {
     public static class MongoDatabaseExtensions
     {
+        /// <summary>
+        /// Adds MongoDb and MongoDbRepository to the service collection.
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="setupAction"></param>
         /// <returns>The IServiceCollection so that additional calls can be chained.</returns>
         public static IServiceCollection AddMongoDb(this IServiceCollection services, Action<AddMongoDbOptions> setupAction)
         {
@@ -28,7 +32,7 @@ namespace MongoDatabaseAdapter
 
                 connectionString = Guard.Against.NullOrWhiteSpace(connectionString, nameof(connectionString));
 
-                // TODO: Provide more connection options
+                //TODO: Provide more connection options
                 return new MongoClient(connectionString);
             });
 
