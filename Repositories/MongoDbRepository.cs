@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Data;
 using System.Threading;
 using System.Threading.Tasks;
 using Ardalis.GuardClauses;
@@ -20,11 +21,20 @@ namespace MongoDatabaseAdapter.Repositories
             CancellationToken ct = default) where T : class
         {
             var (databaseName, collectionName) = ValidateMethodParameters(connectionSettings);
-            var db = _client.GetDatabase(databaseName);
 
-            return await db.GetCollection<T>(collectionName)
+            var databaseCollection = await GetCollectionIfExistsAsync<T>(
+                await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
+
+            return await databaseCollection
                 .Find(Builders<T>.Filter.Empty)
                 .ToListAsync(ct);
+        }
+
+        public Task<T> GetByIdAsync<T>(
+            MongoDbConnectionSettings connectionSettings, 
+            string id, CancellationToken ct = default) where T : class
+        {
+            throw new NotImplementedException();
         }
 
         public async Task InsertOneAsync<T>(
@@ -32,37 +42,48 @@ namespace MongoDatabaseAdapter.Repositories
             T entity, CancellationToken ct = default) where T : class
         {
             var (databaseName, collectionName) = ValidateMethodParameters(connectionSettings);
-            var db = _client.GetDatabase(databaseName);
             
-            await db.GetCollection<T>(collectionName)
-                .InsertOneAsync(document: entity, options: null, cancellationToken: ct);
+            var databaseCollection = await GetCollectionIfExistsAsync<T>(
+                await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
+
+            await databaseCollection.InsertOneAsync(entity, null, ct);
         }
 
         private static (string databaseName, string collectionName) ValidateMethodParameters(
             MongoDbConnectionSettings connectionSettings)
         {
             Guard.Against.Null(connectionSettings, nameof(connectionSettings));
-            
-            Guard.Against.NullOrWhiteSpace(
-                connectionSettings.DatabaseName, 
-                nameof(connectionSettings.DatabaseName));
-            
-            Guard.Against.NullOrWhiteSpace(
-                connectionSettings.CollectionName, 
-                nameof(connectionSettings.CollectionName));
 
-            return (connectionSettings.DatabaseName, connectionSettings.CollectionName);
+            var databaseName = connectionSettings.DatabaseName;
+            var collectionName = connectionSettings.CollectionName;
+
+            Guard.Against.NullOrWhiteSpace(databaseName, nameof(databaseName));
+            Guard.Against.NullOrWhiteSpace(collectionName, nameof(collectionName));
+
+            return (databaseName, collectionName);
         }
 
-        private async Task CheckIfDatabaseExists(string databaseName)
+        private async Task<IMongoDatabase> GetDatabaseIfExistsAsync(string databaseName, CancellationToken ct)
         {
-            var results = await _client.ListDatabaseNamesAsync();
-            var databaseNames = await results.ToListAsync();
+            var results = await _client.ListDatabaseNamesAsync(ct);
+            var databaseNames = await results.ToListAsync(ct);
+
+            if (!databaseNames.Contains(databaseName))
+                throw new ArgumentException(message: "Supplied database name does not exist.");
+
+            return _client.GetDatabase(databaseName);
         }
 
-        private void CheckIfCollectionExists(string collectionName)
+        private static async Task<IMongoCollection<T>> GetCollectionIfExistsAsync<T>(
+            IMongoDatabase mongoDatabase, string collectionName, CancellationToken ct) where T : class
         {
-            
+            var results = await mongoDatabase.ListCollectionNamesAsync(null, ct);
+            var collectionNames = await results.ToListAsync(ct);
+
+            if (!collectionNames.Contains(collectionName))
+                throw new ArgumentException("Supplied collection name does not exist.");
+
+            return mongoDatabase.GetCollection<T>(collectionName);
         }
     }
 }
