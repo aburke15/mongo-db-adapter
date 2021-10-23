@@ -1,15 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+    <!--  TODO: switch to net6.0 when fully available -->
+    <TargetFramework>net5.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     
     <PackageId>ABU.Adapters.MongoDbAdapter</PackageId>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Andre B.</Authors>
-    <Description>MongoDb Adapter for ABU.Adapters</Description>
+    <Description>MongoDb abstraction layer that will hide the connections of the mongo client + add to the service collection</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageTags>MongoDb, Abstraction, Adapter, DbAccess</PackageTags>
     <RepositoryUrl>https://github.com/aburke15/mongo-db-adapter</RepositoryUrl>
