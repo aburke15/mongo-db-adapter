@@ -18,10 +18,10 @@ namespace MongoDatabaseAdapter.Repositories
             => _client = Guard.Against.Null(client, nameof(client));
 
         public async Task<IEnumerable<T>> GetAllAsync<T>(
-            MongoDbConnectionSettings connectionSettings, 
+            MongoDbConnectionSettings settings, 
             CancellationToken ct = default) where T : class
         {
-            var (databaseName, collectionName) = ValidateMethodParameters(connectionSettings);
+            var (databaseName, collectionName) = ValidateMethodParameters(settings);
 
             var databaseCollection = await GetCollectionIfExistsAsync<T>(
                 await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
@@ -31,23 +31,36 @@ namespace MongoDatabaseAdapter.Repositories
                 .ToListAsync(ct);
         }
 
-        public Task<T> GetByIdAsync<T>(
-            MongoDbConnectionSettings connectionSettings, 
+        public Task<T> GetByIdAsync<T>( // TODO: add some type of filter as a param
+            MongoDbConnectionSettings settings, 
             string id, CancellationToken ct = default) where T : class
         {
             throw new NotImplementedException();
         }
 
         public async Task InsertOneAsync<T>(
-            MongoDbConnectionSettings connectionSettings, 
+            MongoDbConnectionSettings settings, 
             T entity, CancellationToken ct = default) where T : class
         {
-            var (databaseName, collectionName) = ValidateMethodParameters(connectionSettings);
+            var (databaseName, collectionName) = ValidateMethodParameters(settings);
             
             var databaseCollection = await GetCollectionIfExistsAsync<T>(
                 await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
 
             await databaseCollection.InsertOneAsync(entity, null, ct);
+        }
+
+        public async Task InsertManyAsync<T>(
+            MongoDbConnectionSettings settings, 
+            IEnumerable<T> entities, 
+            CancellationToken ct = default) where T : class
+        {
+            var (databaseName, collectionName) = ValidateMethodParameters(settings);
+
+            var databaseCollection = await GetCollectionIfExistsAsync<T>(
+                await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
+
+            await databaseCollection.InsertManyAsync(entities, null, ct);
         }
 
         private static (string databaseName, string collectionName) ValidateMethodParameters(
