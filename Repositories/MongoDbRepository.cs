@@ -17,7 +17,7 @@ namespace MongoDatabaseAdapter.Repositories
         public MongoDbRepository(IMongoClient client) 
             => _client = Guard.Against.Null(client, nameof(client));
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>(
+        public async Task<IReadOnlyList<T>> GetAllAsync<T>(
             MongoDbConnectionSettings settings, 
             CancellationToken ct = default) where T : class
         {
