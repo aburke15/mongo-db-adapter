@@ -12,10 +12,10 @@ namespace MongoDatabaseAdapter.Abstractions
         [UsedImplicitly]
         Task<IReadOnlyList<T>> GetAllAsync<T>(MongoDbConnectionSettings settings, CancellationToken ct = default) where T : class;
         [UsedImplicitly]
-        Task<T> GetByIdAsync<T>(MongoDbConnectionSettings settings, string id, CancellationToken ct = default) where T: class;
+        Task<T> GetByIdAsync<T>(MongoDbConnectionSettings settings, string key, CancellationToken ct = default) where T: class;
         [UsedImplicitly]
-        Task InsertOneAsync<T>(MongoDbConnectionSettings settings, T entity, CancellationToken ct = default) where T : class;
+        Task InsertOneAsync<T>(MongoDbConnectionSettings settings, T document, CancellationToken ct = default) where T : class;
         [UsedImplicitly]
-        Task InsertManyAsync<T>(MongoDbConnectionSettings settings, IEnumerable<T> entities, CancellationToken ct = default) where T : class;
+        Task InsertManyAsync<T>(MongoDbConnectionSettings settings, IEnumerable<T> documents, CancellationToken ct = default) where T : class;
     }
 }

@@ -35,7 +35,7 @@ namespace MongoDatabaseAdapter.Repositories
 
         public async Task<T> GetByIdAsync<T>(
             MongoDbConnectionSettings settings, 
-            string id, CancellationToken ct = default) where T : class
+            string key, CancellationToken ct = default) where T : class
         {
             var (databaseName, collectionName) = ValidateMethodParameters(settings);
 
@@ -43,7 +43,7 @@ namespace MongoDatabaseAdapter.Repositories
                 await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
             
             var builder = Builders<T>.Filter;
-            var filter = builder.Eq(IdField, id);
+            var filter = builder.Eq(IdField, key);
 
             return await databaseCollection
                 .Find(filter)
@@ -52,19 +52,19 @@ namespace MongoDatabaseAdapter.Repositories
 
         public async Task InsertOneAsync<T>(
             MongoDbConnectionSettings settings, 
-            T entity, CancellationToken ct = default) where T : class
+            T document, CancellationToken ct = default) where T : class
         {
             var (databaseName, collectionName) = ValidateMethodParameters(settings);
             
             var databaseCollection = await GetCollectionIfExistsAsync<T>(
                 await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
 
-            await databaseCollection.InsertOneAsync(entity, null, ct);
+            await databaseCollection.InsertOneAsync(document, null, ct);
         }
 
         public async Task InsertManyAsync<T>(
             MongoDbConnectionSettings settings, 
-            IEnumerable<T> entities, 
+            IEnumerable<T> documents, 
             CancellationToken ct = default) where T : class
         {
             var (databaseName, collectionName) = ValidateMethodParameters(settings);
@@ -72,7 +72,7 @@ namespace MongoDatabaseAdapter.Repositories
             var databaseCollection = await GetCollectionIfExistsAsync<T>(
                 await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
 
-            await databaseCollection.InsertManyAsync(entities, null, ct);
+            await databaseCollection.InsertManyAsync(documents, null, ct);
         }
 
         private static (string databaseName, string collectionName) ValidateMethodParameters(
