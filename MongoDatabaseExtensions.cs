@@ -32,7 +32,7 @@ namespace MongoDatabaseAdapter
             services.AddOptions();
             services.Configure(setupAction);
 
-            services.AddScoped<IMongoClient, MongoClient>(provider => 
+            services.AddSingleton<IMongoClient, MongoClient>(provider => 
             {
                 var options = provider.GetRequiredService<IOptions<AddMongoDbOptions>>().Value;
                 var connectionString = options?.GetConnectionString();
