@@ -14,6 +14,8 @@ namespace MongoDatabaseAdapter.Repositories
     {
         private readonly IMongoClient _client;
 
+        private const string IdField = "_id";
+
         public MongoDbRepository(IMongoClient client) 
             => _client = Guard.Against.Null(client, nameof(client));
 
@@ -31,11 +33,21 @@ namespace MongoDatabaseAdapter.Repositories
                 .ToListAsync(ct);
         }
 
-        public Task<T> GetByIdAsync<T>( // TODO: add some type of filter as a param
+        public async Task<T> GetByIdAsync<T>(
             MongoDbConnectionSettings settings, 
             string id, CancellationToken ct = default) where T : class
         {
-            throw new NotImplementedException();
+            var (databaseName, collectionName) = ValidateMethodParameters(settings);
+
+            var databaseCollection = await GetCollectionIfExistsAsync<T>(
+                await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
+            
+            var builder = Builders<T>.Filter;
+            var filter = builder.Eq(IdField, id);
+
+            return await databaseCollection
+                .Find(filter)
+                .FirstOrDefaultAsync(ct);
         }
 
         public async Task InsertOneAsync<T>(
