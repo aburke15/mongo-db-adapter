@@ -8,7 +8,7 @@
     <!--<ImplicitUsings>enable</ImplicitUsings>-->
     
     <PackageId>ABU.Adapters.MongoDbAdapter</PackageId>
-    <Version>1.1.7</Version>
+    <Version>1.1.8</Version>
     <Authors>Andre B.</Authors>
     <Description>MongoDb abstraction layer that will hide the connections of the mongo client + add to the service collection</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

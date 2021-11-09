@@ -14,7 +14,7 @@ namespace MongoDatabaseAdapter.Repositories
     {
         private readonly IMongoClient _client;
 
-        private const string IdField = "_id";
+        private const string IdField = "Id";
 
         public MongoDbRepository(IMongoClient client) 
             => _client = Guard.Against.Null(client, nameof(client));
