@@ -1,13 +1,12 @@
-namespace MongoDatabaseAdapter.Options
+namespace MongoDatabaseAdapter.Options;
+
+public class AddMongoDbOptions
 {
-    public class AddMongoDbOptions
-    {
-        private string? _connectionString;
+    private string? _connectionString;
 
-        public void AddConnectionString(string connectionString) 
-            => _connectionString = connectionString;
+    public void AddConnectionString(string connectionString)
+        => _connectionString = connectionString;
 
-        public string? GetConnectionString() 
-            => _connectionString;
-    }
+    public string? GetConnectionString()
+        => _connectionString;
 }
