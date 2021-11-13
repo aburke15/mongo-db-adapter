@@ -1,6 +1,7 @@
 using System;
 using Ardalis.GuardClauses;
 using JetBrains.Annotations;
+using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDatabaseAdapter.Abstractions;
@@ -46,6 +47,7 @@ public static class MongoDatabaseExtensions
         });
 
         services.AddScoped<IMongoDbRepository, MongoDbRepository>();
+        services.AddMediatR(typeof(MongoDatabaseExtensions));
 
         return services;
     }

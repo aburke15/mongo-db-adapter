@@ -19,8 +19,25 @@ public class MongoDbRepository : IMongoDbRepository
     public MongoDbRepository(IMongoClient client)
         => _client = Guard.Against.Null(client, nameof(client));
 
-    public async Task<IReadOnlyList<T>> GetAllAsync<T>(
-        MongoDbConnectionSettings settings,
+    public async Task<T> FindOneAsync<T>(
+        MongoDbConnectionSettings settings, 
+        FilterDefinition<T> filter, 
+        CancellationToken ct = default) where T : 
+    class
+    {
+        var (databaseName, collectionName) = ValidateMethodParameters(settings);
+
+        var databaseCollection = await GetCollectionIfExistsAsync<T>(
+            await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
+
+        return await databaseCollection
+            .Find(filter)
+            .FirstOrDefaultAsync(ct);
+    }
+
+    public async Task<IReadOnlyList<T>> FindManyAsync<T>(
+        MongoDbConnectionSettings settings, 
+        FilterDefinition<T> filter, 
         CancellationToken ct = default) where T : class
     {
         var (databaseName, collectionName) = ValidateMethodParameters(settings);
@@ -29,25 +46,25 @@ public class MongoDbRepository : IMongoDbRepository
             await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
 
         return await databaseCollection
-            .Find(Builders<T>.Filter.Empty)
+            .Find(filter)
             .ToListAsync(ct);
+    }
+
+    public async Task<IReadOnlyList<T>> GetAllAsync<T>(
+        MongoDbConnectionSettings settings,
+        CancellationToken ct = default) where T : class
+    {
+        return await FindManyAsync(settings, Builders<T>.Filter.Empty, ct);
     }
 
     public async Task<T> GetByIdAsync<T>(
         MongoDbConnectionSettings settings,
         string key, CancellationToken ct = default) where T : class
     {
-        var (databaseName, collectionName) = ValidateMethodParameters(settings);
-
-        var databaseCollection = await GetCollectionIfExistsAsync<T>(
-            await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
-
         var builder = Builders<T>.Filter;
         var filter = builder.Eq(IdField, key);
 
-        return await databaseCollection
-            .Find(filter)
-            .FirstOrDefaultAsync(ct);
+        return await FindOneAsync(settings, filter, ct);
     }
 
     public async Task InsertOneAsync<T>(
