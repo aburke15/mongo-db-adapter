@@ -1,7 +1,6 @@
 using System;
 using Ardalis.GuardClauses;
 using JetBrains.Annotations;
-using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using MongoDatabaseAdapter.Abstractions;
@@ -14,7 +13,6 @@ namespace MongoDatabaseAdapter;
 [UsedImplicitly]
 public static class MongoDatabaseExtensions
 {
-    // TODO: convert this to a cqrs style library
     /// <summary>
     /// Adds MongoDb and MongoDbRepository to the service collection.
     /// </summary>
@@ -47,7 +45,6 @@ public static class MongoDatabaseExtensions
         });
 
         services.AddScoped<IMongoDbRepository, MongoDbRepository>();
-        services.AddMediatR(typeof(MongoDatabaseExtensions));
 
         return services;
     }
