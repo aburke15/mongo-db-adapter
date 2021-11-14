@@ -13,7 +13,6 @@ namespace MongoDatabaseAdapter.Repositories;
 public class MongoDbRepository : IMongoDbRepository
 {
     private readonly IMongoClient _client;
-
     private const string IdField = "Id";
 
     public MongoDbRepository(IMongoClient client)
@@ -25,7 +24,7 @@ public class MongoDbRepository : IMongoDbRepository
         CancellationToken ct = default) where T : 
     class
     {
-        var (databaseName, collectionName) = ValidateMethodParameters(settings);
+        var (databaseName, collectionName) = ValidateConnectionSettings(settings);
 
         var databaseCollection = await GetCollectionIfExistsAsync<T>(
             await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
@@ -40,7 +39,7 @@ public class MongoDbRepository : IMongoDbRepository
         FilterDefinition<T> filter, 
         CancellationToken ct = default) where T : class
     {
-        var (databaseName, collectionName) = ValidateMethodParameters(settings);
+        var (databaseName, collectionName) = ValidateConnectionSettings(settings);
 
         var databaseCollection = await GetCollectionIfExistsAsync<T>(
             await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
@@ -71,7 +70,7 @@ public class MongoDbRepository : IMongoDbRepository
         MongoDbConnectionSettings settings,
         T document, CancellationToken ct = default) where T : class
     {
-        var (databaseName, collectionName) = ValidateMethodParameters(settings);
+        var (databaseName, collectionName) = ValidateConnectionSettings(settings);
 
         var databaseCollection = await GetCollectionIfExistsAsync<T>(
             await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
@@ -84,7 +83,7 @@ public class MongoDbRepository : IMongoDbRepository
         IEnumerable<T> documents,
         CancellationToken ct = default) where T : class
     {
-        var (databaseName, collectionName) = ValidateMethodParameters(settings);
+        var (databaseName, collectionName) = ValidateConnectionSettings(settings);
 
         var databaseCollection = await GetCollectionIfExistsAsync<T>(
             await GetDatabaseIfExistsAsync(databaseName, ct), collectionName, ct);
@@ -92,7 +91,7 @@ public class MongoDbRepository : IMongoDbRepository
         await databaseCollection.InsertManyAsync(documents, null, ct);
     }
 
-    private static (string databaseName, string collectionName) ValidateMethodParameters(
+    private static (string databaseName, string collectionName) ValidateConnectionSettings(
         MongoDbConnectionSettings connectionSettings)
     {
         Guard.Against.Null(connectionSettings, nameof(connectionSettings));
