@@ -1,13 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     
     <PackageId>ABU.Adapters.MongoDbAdapter</PackageId>
-    <Version>1.2.05</Version>
+    <Version>1.2.06</Version>
     <Authors>Andre B.</Authors>
     <Description>MongoDb abstraction layer that will hide the connections of the mongo client + add to the service collection</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
